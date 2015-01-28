@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>CloudFlare DNSSEC test domain</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="blog.css" />
+</head>
+<body>
+
+<header id="header" class="header">
+  <div class="wrapper primary-content">
+    <a href="https://www.cloudflare.com/" class="logo logo-header">CloudFlare</a>
+  </div>
+</header>
+
+<div class="wrapper section">
+  <article class="post primary-content">
+    <header>
+      <h1>CloudFlare DNSSEC test domain</h1>
+      <h3 class="subheadline">Help us test our DNSSEC implementation!</h3>
+    </header>
+    <div class="post-content">
+      <p>See the <a href="https://blog.cloudflare.com/">CloudFlare blog</a> for the details.</p>
+      <p>If you have feedback or find any defects, let us know at <i>dnssec dash beta at cloudflare dot com</i>. We’ll make sure to get you some stickers if you find some obscure bug!</p>
+      <p>And if you are a DNSSEC enthusiast and you want to be part of the public beta, send an email to the address above with the answer to this question - first ten people get in:</p>
+      <p><i>What is the DNSSEC algorithm number for ECDSAP256SHA256?</i></p>
+
+      <hr />
+      
+      <p>Here are a couple example outputs of DNS queries. (If your results differ it might be that your resolver does not support DNSSEC.)</p>
+
+      <pre><code>
+$ dig www.cloudflare-dnssec-auth.com A +dnssec
+
+; <<>> DiG 9.10.1-P1 <<>> www.cloudflare-dnssec-auth.com A +dnssec
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28150
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags: do; udp: 4096
+;; QUESTION SECTION:
+;www.cloudflare-dnssec-auth.com.  IN  A
+
+;; ANSWER SECTION:
+www.cloudflare-dnssec-auth.com. 300 IN  A 104.28.28.67
+www.cloudflare-dnssec-auth.com. 300 IN  A 104.28.29.67
+www.cloudflare-dnssec-auth.com. 300 IN  RRSIG A 13 3 300 20150129101734 20150127081734 44478 cloudflare-dnssec-auth.com. 3c4JqU+VvrPikZtJkNO4BwXkEgUFZ+SEqQ1MqkKc3qugAL/VJHkJKPeF +qN8rf4Exop4WTX8+c0GOVwcZGRdFg==
+
+;; Query time: 15 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Wed Jan 28 09:17:34 GMT 2015
+;; MSG SIZE  rcvd: 213
+      </code></pre>
+      <pre><code>
+$ dig cloudflare-dnssec-auth.com DNSKEY +dnssec
+
+; <<>> DiG 9.10.1-P1 <<>> cloudflare-dnssec-auth.com DNSKEY +dnssec
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52991
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags: do; udp: 4096
+;; QUESTION SECTION:
+;cloudflare-dnssec-auth.com.  IN  DNSKEY
+
+;; ANSWER SECTION:
+cloudflare-dnssec-auth.com. 3571 IN DNSKEY  257 3 13 32NbP1ghYJTDIdYaAKRKTID3KtAR67Icmf5g+OG/XBF0fznMDHy634A2 u+eKIi3O+dXksBX4reGSYq69C1NHhw==
+cloudflare-dnssec-auth.com. 3571 IN DNSKEY  256 3 13 ZiwUJdigMpimQHrsMZzDFjTIG0YN4B31TLB1biVAUXONNndf65j4nic7 FQsIUWKtEKfhYiVvrrpbdqZib0KSLw==
+cloudflare-dnssec-auth.com. 3571 IN RRSIG DNSKEY 13 2 3600 20150723232135 20150123002135 9277 cloudflare-dnssec-auth.com. kYqAftRX0B/SljXmKdStjmvtAcu3nJWPuvBqHEWfdoHaSKqE+D2J4rxt cGfRHXeWNqnsls/oOW6Nq4bnGJTZVg==
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Wed Jan 28 09:18:03 GMT 2015
+;; MSG SIZE  rcvd: 337
+      </code></pre>
+      <pre><code>
+$ dig www.cloudflare-dnssec-cname.com A +dnssec +cd
+
+; <<>> DiG 9.10.1-P1 <<>> www.cloudflare-dnssec-cname.com A +dnssec
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 987
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags: do; udp: 4096
+;; QUESTION SECTION:
+;www.cloudflare-dnssec-cname.com. IN  A
+
+;; ANSWER SECTION:
+www.cloudflare-dnssec-cname.com. 600 IN CNAME www.cloudflare-dnssec-cname.com.cdn.cloudflare-dnssec.net.
+www.cloudflare-dnssec-cname.com. 600 IN RRSIG CNAME 8 3 600 20150212082654 20150128082654 2760 cloudflare-dnssec-cname.com. sxr6XOqNQghcmL197/m5n2Bv3DEv2TT7EISf5TizqfuDSKMK9j8cHPSZ kKIuMgv1kwugLZcwpF973BIXFK+r5NZa11Hkh4hwdpNpG9pjykjzFG2n WDSDTRzHauX2+9Rf1cLFe8dU9cABkxNwH3EqewyHNPRu57PpjMlmYnBQ Pnk=
+www.cloudflare-dnssec-cname.com.cdn.cloudflare-dnssec.net. 300 IN A 104.28.0.18
+www.cloudflare-dnssec-cname.com.cdn.cloudflare-dnssec.net. 300 IN A 104.28.1.18
+www.cloudflare-dnssec-cname.com.cdn.cloudflare-dnssec.net. 300 IN RRSIG A 13 6 300 20150129102015 20150127082015 45140 cloudflare-dnssec.net. y10Kcz7eiVrjDCaTPyjceMmfPQk1FMfzFdo0xxNghAujQQxBWp1r6k2/ kc167BzE9V832hN9WcyiycujtQ5/aw==
+
+;; Query time: 1410 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Wed Jan 28 09:20:17 GMT 2015
+;; MSG SIZE  rcvd: 467
+      </code></pre>
+    </div>
+  </article>
+</div>
+</body>
+</html>
